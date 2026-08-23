@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: engineering-analytics
+
+integrations:
+  allowed-origin: http://localhost:4200
+  sonar:
+    url: https://sonar.minhaempresa.com
+    token: ${SONAR_TOKEN:}
+    project-keys: ""
+  jenkins:
+    url: https://jenkins.minhaempresa.com
+    user: ${JENKINS_USER:}
+    api-token: ${JENKINS_API_TOKEN:}
+    view: ""
+
+logging:
+  level:
+    com.analytics.engineering: INFO
+    org.springframework.web.reactive.function.client: WARN

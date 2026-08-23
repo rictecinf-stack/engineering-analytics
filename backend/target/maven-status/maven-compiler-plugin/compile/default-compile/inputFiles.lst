@@ -1,0 +1,13 @@
+/Users/ricardoololiveira/Downloads/engineering-analytics 2/backend/src/main/java/com/analytics/engineering/EngineeringAnalyticsApplication.java
+/Users/ricardoololiveira/Downloads/engineering-analytics 2/backend/src/main/java/com/analytics/engineering/client/JenkinsClient.java
+/Users/ricardoololiveira/Downloads/engineering-analytics 2/backend/src/main/java/com/analytics/engineering/client/SonarClient.java
+/Users/ricardoololiveira/Downloads/engineering-analytics 2/backend/src/main/java/com/analytics/engineering/config/CacheConfig.java
+/Users/ricardoololiveira/Downloads/engineering-analytics 2/backend/src/main/java/com/analytics/engineering/config/ExternalApiProperties.java
+/Users/ricardoololiveira/Downloads/engineering-analytics 2/backend/src/main/java/com/analytics/engineering/config/WebConfig.java
+/Users/ricardoololiveira/Downloads/engineering-analytics 2/backend/src/main/java/com/analytics/engineering/controller/DashboardController.java
+/Users/ricardoololiveira/Downloads/engineering-analytics 2/backend/src/main/java/com/analytics/engineering/dto/DashboardOverviewResponse.java
+/Users/ricardoololiveira/Downloads/engineering-analytics 2/backend/src/main/java/com/analytics/engineering/dto/ReleasesOverviewResponse.java
+/Users/ricardoololiveira/Downloads/engineering-analytics 2/backend/src/main/java/com/analytics/engineering/exception/GlobalExceptionHandler.java
+/Users/ricardoololiveira/Downloads/engineering-analytics 2/backend/src/main/java/com/analytics/engineering/service/DashboardService.java
+/Users/ricardoololiveira/Downloads/engineering-analytics 2/backend/src/main/java/com/analytics/engineering/service/JenkinsService.java
+/Users/ricardoololiveira/Downloads/engineering-analytics 2/backend/src/main/java/com/analytics/engineering/service/SonarService.java

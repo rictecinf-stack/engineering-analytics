@@ -1,0 +1,29 @@
+<header class="topbar">
+  <div class="topbar-title">
+    <h1>{{ title }}</h1>
+    <p>{{ subtitle }}</p>
+  </div>
+
+  <div class="topbar-actions">
+    <div class="date-range">
+      <input type="date" [(ngModel)]="from" (change)="onFilterChange()" />
+      <span>—</span>
+      <input type="date" [(ngModel)]="to" (change)="onFilterChange()" />
+    </div>
+
+    <select *ngIf="showTechnologyFilter" [(ngModel)]="technology" (change)="onFilterChange()" class="filter-select">
+      <option value="">Todas as tecnologias</option>
+      <option *ngFor="let t of technologyOptions" [value]="t">{{ t }}</option>
+    </select>
+
+    <select *ngIf="showEnvironmentFilter" [(ngModel)]="environmentValue" (change)="onFilterChange()" class="filter-select">
+      <option *ngFor="let opt of environmentOptions" [value]="opt.value">{{ opt.label }}</option>
+    </select>
+
+    <button class="icon-btn" title="Tema">☀️</button>
+    <button class="icon-btn" title="Notificações">🔔</button>
+    <div class="avatar">AD</div>
+
+    <button class="refresh-btn" (click)="onRefresh()">⟳ Atualizar</button>
+  </div>
+</header>

@@ -1,0 +1,160 @@
+<app-topbar
+  title="Visão Geral"
+  subtitle="Panorama geral da qualidade e evolução dos projetos"
+  [showTechnologyFilter]="true"
+  [technologyOptions]="technologyOptions"
+  (filtersChange)="onFiltersChange($event)"
+  (refresh)="load()">
+</app-topbar>
+
+<div *ngIf="loading" class="state-msg">Carregando dados do Sonar e Jenkins...</div>
+<div *ngIf="error" class="state-msg error">{{ error }}</div>
+
+<ng-container *ngIf="data as d">
+  <!-- KPI cards -->
+  <section class="kpi-grid">
+    <app-kpi-card icon="🗂️" accent="blue" label="Projetos"
+      [value]="d.summary.projects.value" [variationLabel]="d.summary.projects.variationLabel" [trend]="d.summary.projects.trend"></app-kpi-card>
+    <app-kpi-card icon="🚀" accent="green" label="Releases"
+      [value]="d.summary.releases.value" [variationLabel]="d.summary.releases.variationLabel" [trend]="d.summary.releases.trend"></app-kpi-card>
+    <app-kpi-card icon="</>" accent="purple" label="Linhas de Código"
+      [value]="d.summary.linesOfCode.value" [variationLabel]="d.summary.linesOfCode.variationLabel" [trend]="d.summary.linesOfCode.trend"></app-kpi-card>
+    <app-kpi-card icon="🗄️" accent="orange" label="Tecnologias"
+      [value]="d.summary.technologies.value" [variationLabel]="d.summary.technologies.variationLabel" [trend]="d.summary.technologies.trend"></app-kpi-card>
+    <app-kpi-card icon="🛡️" accent="teal" label="Cobertura Média"
+      [value]="d.summary.averageCoverage.value" [variationLabel]="d.summary.averageCoverage.variationLabel" [trend]="d.summary.averageCoverage.trend"></app-kpi-card>
+    <app-kpi-card icon="🛡️" accent="red" label="Vulnerabilidades"
+      [value]="d.summary.vulnerabilities.value" [variationLabel]="d.summary.vulnerabilities.variationLabel" [trend]="d.summary.vulnerabilities.trend"></app-kpi-card>
+    <app-kpi-card icon="⚠️" accent="orange" label="Issues Críticas"
+      [value]="d.summary.criticalIssues.value" [variationLabel]="d.summary.criticalIssues.variationLabel" [trend]="d.summary.criticalIssues.trend"></app-kpi-card>
+  </section>
+
+  <!-- Charts row -->
+  <section class="charts-grid">
+    <div class="card">
+      <h3>Linhas de código por tecnologia</h3>
+      <div class="donut-wrap">
+        <canvas baseChart
+          [data]="donutData"
+          [options]="donutOptions"
+          type="doughnut">
+        </canvas>
+        <div class="donut-center">
+          <strong>{{ d.summary.linesOfCode.value }}</strong>
+          <span>Total</span>
+        </div>
+      </div>
+      <ul class="legend">
+        <li *ngFor="let item of d.linesByTechnology; let i = index">
+          <span class="dot" [style.background]="legendColor(i)"></span>
+          {{ item.label }}
+          <span class="legend-value">{{ (item.value / 1000000).toFixed(1) }}M</span>
+        </li>
+      </ul>
+      <a class="see-all" routerLink="/tecnologias">Ver todas as tecnologias →</a>
+    </div>
+
+    <div class="card">
+      <h3>Evolução das linhas de código</h3>
+      <div class="chart-tall">
+        <canvas baseChart [data]="lineData" [options]="lineOptions" type="line"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Releases por mês</h3>
+      <div class="chart-tall">
+        <canvas baseChart [data]="barData" [options]="barOptions" type="bar"></canvas>
+      </div>
+      <a class="see-all" routerLink="/releases">Ver histórico completo →</a>
+    </div>
+  </section>
+
+  <!-- Quality + Technologies -->
+  <section class="bottom-grid">
+    <div class="card">
+      <h3>Indicadores de Qualidade</h3>
+      <div class="quality-grid">
+        <div class="quality-item" *ngFor="let q of d.qualityIndicators">
+          <p class="q-name">{{ q.name }}</p>
+          <p class="q-value" [class]="'trend-' + q.trend">{{ q.value }}</p>
+          <p class="q-variation">
+            <span *ngIf="q.trend === 'up'">↑</span>
+            <span *ngIf="q.trend === 'down'">↓</span>
+            {{ q.variationLabel }}
+          </p>
+        </div>
+      </div>
+      <a class="see-all" routerLink="/qualidade">Ver todos os indicadores →</a>
+    </div>
+
+    <div class="card">
+      <h3>Tecnologias</h3>
+      <table class="tech-table">
+        <thead>
+          <tr>
+            <th>Tecnologia</th>
+            <th>Projetos</th>
+            <th>Linhas de Código</th>
+            <th>Cobertura</th>
+            <th>Vulnerabilidades</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of d.technologies">
+            <td>{{ t.name }}</td>
+            <td>{{ t.projects }}</td>
+            <td>{{ t.linesOfCode }}</td>
+            <td><span class="badge badge-green">{{ t.coveragePercent.toFixed(1) }}%</span></td>
+            <td><span class="badge badge-red">{{ t.vulnerabilities }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <a class="see-all" routerLink="/tecnologias">Ver todas as tecnologias →</a>
+    </div>
+  </section>
+
+  <!-- Footer stats -->
+  <section class="footer-stats">
+    <div class="footer-item">
+      <span class="footer-icon">🚀</span>
+      <div>
+        <p class="f-label">Última Release</p>
+        <p class="f-value">{{ d.footerStats.lastReleaseVersion }}</p>
+        <p class="f-sub">🕐 {{ d.footerStats.lastReleaseDate }}</p>
+      </div>
+    </div>
+    <div class="footer-item">
+      <span class="footer-icon">👥</span>
+      <div>
+        <p class="f-label">Lead Time Médio</p>
+        <p class="f-value">{{ d.footerStats.averageLeadTimeDays }}</p>
+        <p class="f-sub">↓ {{ d.footerStats.leadTimeVariation }}</p>
+      </div>
+    </div>
+    <div class="footer-item">
+      <span class="footer-icon">🚀</span>
+      <div>
+        <p class="f-label">Deployments</p>
+        <p class="f-value">{{ d.footerStats.deployments }}</p>
+        <p class="f-sub">↑ {{ d.footerStats.deploymentsVariation }}</p>
+      </div>
+    </div>
+    <div class="footer-item">
+      <span class="footer-icon">🛡️</span>
+      <div>
+        <p class="f-label">Falhas em Deploy</p>
+        <p class="f-value">{{ d.footerStats.deployFailures }}</p>
+        <p class="f-sub">↓ {{ d.footerStats.deployFailuresVariation }}</p>
+      </div>
+    </div>
+    <div class="footer-item">
+      <span class="footer-icon">☁️</span>
+      <div>
+        <p class="f-label">Ambientes Monitorados</p>
+        <p class="f-value">{{ d.footerStats.monitoredEnvironments }}</p>
+        <p class="f-sub">Sem alterações</p>
+      </div>
+    </div>
+  </section>
+</ng-container>

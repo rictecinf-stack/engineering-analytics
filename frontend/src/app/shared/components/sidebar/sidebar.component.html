@@ -1,0 +1,25 @@
+<aside class="sidebar">
+  <div class="brand">
+    <span class="brand-icon">&lt;/&gt;</span>
+    <div class="brand-text">
+      <strong>Engineering</strong>
+      <span>Analytics</span>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <a *ngFor="let item of navItems"
+       [routerLink]="item.link"
+       routerLinkActive="active"
+       class="nav-item">
+      <span class="nav-icon">{{ item.icon }}</span>
+      {{ item.label }}
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <p class="update-title">Última atualização</p>
+    <p class="update-time">{{ lastUpdatedLabel }}</p>
+    <span class="status-dot">✔ Dados atualizados</span>
+  </div>
+</aside>

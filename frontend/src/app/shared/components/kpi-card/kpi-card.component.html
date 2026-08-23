@@ -1,0 +1,10 @@
+<div class="kpi-card" [class]="'accent-' + accent">
+  <div class="kpi-icon">{{ icon }}</div>
+  <div class="kpi-body">
+    <p class="kpi-label">{{ label }}</p>
+    <p class="kpi-value">{{ value }}</p>
+    <p class="kpi-variation" [class]="'trend-' + trend" *ngIf="variationLabel">
+      <span *ngIf="trendIcon">{{ trendIcon }}</span> {{ variationLabel }}
+    </p>
+  </div>
+</div>

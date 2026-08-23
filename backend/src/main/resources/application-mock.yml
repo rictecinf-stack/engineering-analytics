@@ -1,0 +1,13 @@
+spring:
+  config:
+    activate:
+      on-profile: mock
+
+integrations:
+  sonar:
+    url: http://127.0.0.1:9001
+    token: mock-token
+  jenkins:
+    url: http://127.0.0.1:9002
+    user: mock
+    api-token: mock-token

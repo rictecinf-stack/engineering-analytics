@@ -1,0 +1,62 @@
+<app-topbar
+  title="Releases"
+  subtitle="Histórico de deploys e builds vindos do Jenkins"
+  [showEnvironmentFilter]="true"
+  (filtersChange)="onFiltersChange($event)"
+  (refresh)="load()">
+</app-topbar>
+
+<div *ngIf="loading" class="state-msg">Carregando dados do Jenkins...</div>
+<div *ngIf="error" class="state-msg error">{{ error }}</div>
+
+<ng-container *ngIf="data as d">
+  <section class="kpi-grid">
+    <app-kpi-card icon="🚀" accent="blue" label="Total de Releases"
+      [value]="d.totalReleases.value" [variationLabel]="d.totalReleases.variationLabel" [trend]="d.totalReleases.trend"></app-kpi-card>
+    <app-kpi-card icon="✅" accent="green" label="Taxa de Sucesso"
+      [value]="d.successRate.value" [variationLabel]="d.successRate.variationLabel" [trend]="d.successRate.trend"></app-kpi-card>
+    <app-kpi-card icon="⏱️" accent="teal" label="Lead Time Médio"
+      [value]="d.averageLeadTime.value" [variationLabel]="d.averageLeadTime.variationLabel" [trend]="d.averageLeadTime.trend"></app-kpi-card>
+    <app-kpi-card icon="🛡️" accent="red" label="Falhas em Deploy"
+      [value]="d.deployFailures.value" [variationLabel]="d.deployFailures.variationLabel" [trend]="d.deployFailures.trend"></app-kpi-card>
+  </section>
+
+  <section class="card chart-card">
+    <h3>Releases por mês</h3>
+    <div class="chart-tall">
+      <canvas baseChart [data]="barData" [options]="barOptions" type="bar"></canvas>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="table-header">
+      <h3>Histórico de Releases</h3>
+      <span class="table-note">Dados em tempo real via Jenkins API</span>
+    </div>
+    <table class="releases-table">
+      <thead>
+        <tr>
+          <th>Job / Pipeline</th>
+          <th>Versão</th>
+          <th>Ambiente</th>
+          <th>Status</th>
+          <th>Data</th>
+          <th>Duração</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of d.releases">
+          <td>{{ r.jobName }}</td>
+          <td>{{ r.version }}</td>
+          <td class="muted">{{ r.environment }}</td>
+          <td><span class="badge" [class]="statusClass(r.status)">{{ statusLabel(r.status) }}</span></td>
+          <td class="muted">{{ r.date }}</td>
+          <td class="muted">{{ r.durationLabel }}</td>
+        </tr>
+        <tr *ngIf="d.releases.length === 0">
+          <td colspan="6" class="empty">Nenhuma release encontrada para os filtros selecionados.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</ng-container>
