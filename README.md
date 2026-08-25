@@ -3,6 +3,11 @@
 Projeto com **Angular 18** (frontend) e **Spring Boot 3** (backend) que replica a tela
 "Visão Geral" e busca os dados reais do **SonarQube** e **Jenkins**.
 
+## Arquitetura
+
+![Texto alternativo da imagem](.oracle_persistence_architecture.png)
+
+
 ## Estrutura
 
 ```
